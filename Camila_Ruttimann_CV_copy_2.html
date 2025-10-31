@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Resume — CAMILA BARBOSA RUTTIMANN</title>
+    <style>
+      :root {
+        --blue: #3269c1;
+        --dark: #333333;
+        --light: #f2f5fb;
+        --accent: #1e4da0;
+        --text: #444444;
+
+        --page-margin: 15mm;
+        --column-gap: 6mm;
+        --row-gap: 5mm;
+        --header-height: 60px;
+        --sidebar-width: 65mm;
+
+        --font-header: 20px;
+        --font-title: 14px;
+        --font-base: 11.7px;
+        --font-small: 10.5px;
+        --font-tiny: 9px;
+      }
+
+      body {
+        font-family: Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        background: #f0f0f0;
+        color: var(--dark);
+        line-height: 1.4;
+        font-size: var(--font-base);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 10px;
+      }
+
+      .a4-container {
+        width: 210mm;
+        height: 297mm;
+        background: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        margin: 0 auto;
+      }
+
+      .grid-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 200;
+        display: none;
+      }
+
+      .show-grid .grid-overlay {
+        display: block;
+      }
+
+      .grid-overlay::before {
+        content: "";
+        position: absolute;
+        top: var(--page-margin);
+        left: var(--page-margin);
+        right: var(--page-margin);
+        bottom: var(--page-margin);
+        border: 2px solid rgba(255, 0, 0, 0.3);
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 9mm,
+          rgba(0, 150, 255, 0.1) 9mm,
+          rgba(0, 150, 255, 0.1) 10mm
+        );
+      }
+
+      .margin-guides {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 201;
+        display: none;
+      }
+
+      .show-grid .margin-guides {
+        display: block;
+      }
+
+      .margin-guides::before,
+      .margin-guides::after {
+        content: "";
+        position: absolute;
+        background: rgba(255, 100, 0, 0.2);
+      }
+
+      .margin-guides::before {
+        top: 0;
+        left: 0;
+        width: var(--page-margin);
+        height: 100%;
+      }
+
+      .margin-guides::after {
+        top: 0;
+        right: 0;
+        width: var(--page-margin);
+        height: 100%;
+      }
+
+      .a4-border {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 1mm dashed #cccccc;
+        pointer-events: none;
+        z-index: 100;
+      }
+
+      .page {
+        width: 100%;
+        height: 100%;
+        padding: var(--page-margin);
+        box-sizing: border-box;
+        display: grid;
+        grid-template-rows: var(--header-height) 1fr;
+        gap: var(--row-gap);
+      }
+
+      .header {
+        background: var(--blue);
+        height: 50px;
+        padding: 14px 14px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        color: white;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-left {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header-right {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .social-icon {
+        width: 28px;
+        height: 28px;
+        background: white;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s;
+        text-decoration: none;
+      }
+
+      .social-icon:hover {
+        transform: scale(1.1);
+      }
+
+      .social-icon svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .name {
+        font-weight: 700;
+        font-size: var(--font-header);
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+      }
+
+      .contact {
+        font-size: var(--font-small);
+        opacity: 0.95;
+      }
+
+      .contact-line {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 2px;
+        color: var(--light);
+      }
+
+      .contact a {
+        color: inherit;
+        text-decoration: none;
+        cursor: text;
+        margin-right: 15px;
+      }
+
+      /* sidebar + content */
+      .container {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) 2fr;
+        gap: var(--column-gap);
+        overflow: hidden;
+      }
+
+      /* left column */
+      .left {
+        margin-top: 10px;
+        background: var(--light);
+        padding: 11px;
+        border-radius: 4px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* right column */
+      .right {
+        margin-top: 10px;
+        padding-top: 11px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .section {
+        margin-bottom: 0;
+      }
+
+      .section-title {
+        color: var(--blue);
+        font-weight: 700;
+        margin: 0 0 7px 0;
+        font-size: var(--font-title);
+        border-bottom: 1.5px solid var(--blue);
+        padding-bottom: 3px;
+      }
+
+      h3 {
+        color: var(--blue);
+        margin: 0 0 7px 0;
+        font-size: var(--font-title);
+        border-bottom: 1px solid #e7edf9;
+        padding-bottom: 3px;
+      }
+
+      .job-title {
+        font-weight: 700;
+        color: var(--dark);
+        font-size: var(--font-base);
+        margin-bottom: 2px;
+      }
+
+      .company {
+        color: var(--accent);
+        font-size: var(--font-base);
+        font-weight: 600;
+      }
+
+      .job-period {
+        float: right;
+        color: #666666;
+        font-style: italic;
+        font-size: var(--font-small);
+        margin-right: 9px;
+      }
+
+      ul {
+        margin: 7px 0 10px 16px;
+        padding: 0;
+        font-size: var(--font-base);
+        color: var(--text);
+        line-height: 1.45;
+      }
+
+      li {
+        margin-bottom: 3px;
+      }
+
+      .skill-key {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: var(--font-base);
+        display: inline-block;
+        width: 70px;
+      }
+
+      .job-item {
+        margin-bottom: 11px;
+        padding-bottom: 7px;
+        border-bottom: 1px dashed #e7edf9;
+      }
+
+      .job-item:last-child {
+        border-bottom: none;
+      }
+
+      .project-title {
+        font-weight: 600;
+        color: var(--accent);
+        margin: 7px 0 4px 0;
+        font-size: var(--font-base);
+      }
+
+      .skills-container {
+        font-size: var(--font-base);
+        color: var(--text);
+        line-height: 1.5;
+      }
+
+      .skill-category {
+        margin-bottom: 7px;
+      }
+
+      .skill-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 3px;
+      }
+
+      .skill-item {
+        background: white;
+        padding: 3px 7px;
+        border-radius: 3px;
+        border: 1px solid #dbe5f5;
+        font-size: var(--font-small);
+      }
+
+      .skill-divider {
+        color: var(--accent);
+        font-weight: bold;
+        margin: 0 2px;
+      }
+
+      .compact-list {
+        margin: 5px 0 9px 16px;
+      }
+
+      .compact-list li {
+        margin-bottom: 3px;
+      }
+
+      .education-text,
+      .languages-text,
+      .achievements-text {
+        font-size: var(--font-base);
+        color: var(--text);
+        line-height: 1.5;
+      }
+
+      .education-title,
+      .achievement-title {
+        font-weight: 700;
+        color: var(--accent);
+        font-size: var(--font-base);
+      }
+
+      .summary-text {
+        font-size: var(--font-base);
+        color: var(--text);
+        margin-bottom: 12px;
+        line-height: 1.5;
+      }
+
+      @media print {
+        .grid-overlay,
+        .margin-guides {
+          display: none !important;
+        }
+
+        body {
+          margin: 0;
+          background: white;
+          padding: 0;
+        }
+
+        .a4-container {
+          box-shadow: none;
+          margin: 0;
+        }
+
+        .a4-border {
+          display: none;
+        }
+
+        .page {
+          padding: var(--page-margin);
+        }
+
+        .header {
+          background: var(--blue) !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .left {
+          background: var(--light) !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .skill-item {
+          background: white !important;
+          border: 1px solid #dbe5f5 !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .section-title,
+        h3,
+        .skill-key,
+        .company,
+        .project-title {
+          color: #1e4da0 !important;
+        }
+
+        .job-item,
+        .section {
+          page-break-inside: avoid;
+        }
+
+        * {
+          font-family: Inter, Roboto, "Helvetica Neue", Arial, sans-serif !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="a4-container">
+      <div class="a4-border"></div>
+      <div class="grid-overlay"></div>
+      <div class="margin-guides"></div>
+
+      <div class="page">
+        <div class="header">
+          <div class="header-left">
+            <div class="name">CAMILA BARBOSA RUTTIMANN</div>
+            <div class="contact">
+              <div class="contact-line">
+                <span>Rio de Janeiro, Brazil</span>
+                <span>+55 (21) 96736-0113</span>
+                <span>camilarut@gmail.com</span>
+              </div>
+              <a
+                class="contact"
+                href="https://linkedin.com/in/camila-ruttimann"
+              >
+                linkedin.com/in/camila-ruttimann
+              </a>
+              <a class="contact" href="https://github.com/camilarutt">
+                github.com/camilarutt
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <aside class="left">
+            <div class="section">
+              <div class="section-title">Professional Summary</div>
+              <div class="skills-container">
+                <div class="skill-category">
+                  <span class="skill-key">Technologies:</span>
+                  <div class="skill-list">
+                    <span class="skill-item">React</span>
+                    <span class="skill-item">Node.js</span>
+                    <span class="skill-item">JavaScript</span>
+                    <span class="skill-item">TypeScript</span>
+                    <span class="skill-item">Electron</span>
+                    <span class="skill-item">GraphQL</span>
+                    <span class="skill-item">SQL</span>
+                    <span class="skill-item">HTML5/CSS3</span>
+                    <span class="skill-item">Tailwind</span>
+                  </div>
+                </div>
+
+                <div class="skill-category">
+                  <span class="skill-key">Tools:</span>
+                  <div class="skill-list">
+                    <span class="skill-item">Git & GitHub</span>
+                    <span class="skill-item">VSCode</span>
+                    <span class="skill-item">Figma</span>
+                    <span class="skill-item">Jest</span>
+                    <span class="skill-item">Vite</span>
+                    <span class="skill-item">Linux</span>
+                  </div>
+                </div>
+
+                <div class="skill-category">
+                  <span class="skill-key">Skills:</span>
+                  <div class="skill-list">
+                    <span class="skill-item">Full Stack Development</span>
+                    <span class="skill-item">UI/UX Design</span>
+                    <span class="skill-item">Remote Work</span>
+                    <span class="skill-item">Project Management</span>
+                    <span class="skill-item">Agile Methodologies</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">Education</div>
+              <div class="education-text">
+                <div class="education-title">
+                  Federal Fluminense University (UFF)
+                </div>
+                <div style="margin-bottom: 10px">
+                  Bachelor's in Industrial Design — Graduated in Jan 2025
+                </div>
+
+                <div class="education-title">Trybe</div>
+                <div>Full Stack Web Development Course — 2022 – 2023</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="section-title">Languages</div>
+              <div class="languages-text">
+                <div>• Portuguese — Native</div>
+                <div>• English — Fluent</div>
+                <div>• French — Basic (A2)</div>
+                <div>• Spanish — Basic</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div style="margin-bottom: 15px" class="section-title">
+                Achievements
+              </div>
+              <div class="achievements-text">
+                <div class="achievement-title">Scientific Publication</div>
+                <div style="margin-bottom: 8px">
+                  AHFE Congress 2019 – Washington, DC — "Sequaca – Cognitive
+                  Rehabilitation Game Kit"
+                </div>
+
+                <div class="achievement-title">Certifications</div>
+                <div>
+                  Web Development — Trybe (2022)<br />
+                  Front-end Module — Trybe (2023)<br />
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <main class="right">
+            <div>
+              <h3>Professional Summary</h3>
+              <div class="summary-text">
+                Full Stack Developer with a Design background and expertise in
+                React, Node.js, and Electron. Proven track record in
+                international projects, developing web and desktop applications
+                with a strong focus on usability and user experience. Skilled in
+                remote work and effective collaboration with international
+                teams.
+              </div>
+            </div>
+
+            <div>
+              <h3>Professional Experience</h3>
+
+              <div class="job-item">
+                <div class="job-title">
+                  Independent Contractor — Junior Web Developer
+                </div>
+                <div class="company">
+                  Virtustant <span class="job-period">May 2025 – Sep 2025</span>
+                </div>
+
+                <div class="project-title">
+                  Mumblemouth App – Conflict Games
+                </div>
+                <ul class="compact-list">
+                  <li>
+                    Developed cross-platform desktop application with Electron +
+                    React, delivering performant MVP with modern UI/UX
+                  </li>
+                  <li>
+                    Integrated Gemini AI API for content generation and
+                    transcription capabilities, driving core product features
+                  </li>
+                  <li>
+                    Engineered responsive front-end architecture and
+                    collaborated in distributed international team environment
+                  </li>
+                </ul>
+
+                <div class="project-title">BēKIN</div>
+                <ul class="compact-list">
+                  <li>
+                    Full-stack development with GraphQL, React, and REST APIs,
+                    building scalable architecture with advanced database
+                    management
+                  </li>
+                  <li>
+                    Implemented multi-step forms with state persistence and
+                    dynamic data tables with CRUD operations and advanced
+                    filtering
+                  </li>
+                  <li>
+                    Developed global state management systems and enhanced admin
+                    dashboard with real-time metrics and data visualizations
+                  </li>
+                  <li>
+                    Built role-based authentication and executed complex
+                    database operations, leveraging AI tools for development
+                    acceleration
+                  </li>
+                </ul>
+              </div>
+
+              <div class="job-item">
+                <div class="job-title">Accommodation Manager</div>
+                <div class="company">
+                  Self-employed (Airbnb)
+                  <span class="job-period">2024 – Present</span>
+                </div>
+                <ul class="compact-list">
+                  <li>
+                    Complete property management, from bookings to maintenance
+                  </li>
+                  <li>
+                    Customer service focused on experience and positive reviews
+                  </li>
+                </ul>
+              </div>
+
+              <div class="job-item">
+                <div class="job-title">
+                  Freelancer — Search Engine Evaluator
+                </div>
+                <div class="company">
+                  Appen - CrowdGen
+                  <span class="job-period">Aug 2021 – Aug 2023</span>
+                </div>
+                <ul class="compact-list">
+                  <li>
+                    Analysis and evaluation of search results for SEO
+                    improvement
+                  </li>
+                  <li>
+                    Remote work with international team in a high-precision
+                    environment
+                  </li>
+                </ul>
+              </div>
+
+              <div class="job-item">
+                <div class="job-title">Game Designer & Producer</div>
+                <div class="company">
+                  TREVOUS Studio
+                  <span class="job-period">Feb 2021 – Feb 2022</span>
+                </div>
+                <ul class="compact-list">
+                  <li>Scope, schedule and production workflow management</li>
+                  <li>
+                    Creation and game design of a visual novel style mobile
+                    game, published on Google Play
+                  </li>
+                  <li>
+                    Executive production of proposals for public notices and art
+                    direction
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
